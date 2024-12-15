@@ -1,0 +1,6 @@
+﻿services:
+  surchargeapi:
+    image: surchargeapi
+    build:
+      context: .
+      dockerfile: SurchargeAPI/Dockerfile
