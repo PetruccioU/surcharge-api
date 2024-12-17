@@ -14,7 +14,7 @@ public static class SurchargeCalculator
         
         if (_total <= 0 || _surchargeAmount <= 0)
         {
-            throw new ArgumentException("Total must be greater than zero.");
+            throw new ArgumentException("Total and Surcharge must be greater than zero.");
         }
 
         _purchase = _total - _surchargeAmount;
