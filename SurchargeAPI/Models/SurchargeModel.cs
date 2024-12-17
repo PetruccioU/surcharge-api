@@ -5,6 +5,9 @@ namespace SurchargeAPI.Models;
 
 public class SurchargeModel
 {
+    
+    public SurchargeModel() { }
+    
     public SurchargeModel(
         string title, 
         string description, 
@@ -15,24 +18,24 @@ public class SurchargeModel
     {
         Id = Guid.NewGuid();
         PlacesApiId = placesApiId;
-        SurchargePercentage = SurchargeCalculator.CalculateSurcharge(surcharge, total);
+        // SurchargePercentage = SurchargeCalculator.CalculateSurcharge(surcharge, total);
         PaymentMethod = paymentMethod;
         Title = title;
         Description = description;
-        CreatedAt = DateTime.UtcNow;
-        UpdatedAt = DateTime.UtcNow;
+        // CreatedAt = DateTime.UtcNow;
+        // UpdatedAt = DateTime.UtcNow;
     }
     
-    public Guid Id { get; init; }
+    public Guid Id { get; set; }
     public string PlacesApiId { get; set; }
-    public PaymentMethods? PaymentMethod { get; init; } 
-    public double SurchargePercentage { get; init; }
+    public PaymentMethods? PaymentMethod { get; set; } 
+    public double SurchargePercentage => SurchargeCalculator.CalculateSurcharge(Surcharge, Total); // Computed
+    public double Surcharge { get; set; }
+    public double Total { get; set; }
+    public string? Title { get; set; }
+    public string?  Description { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     
-    public double Surcharge { get; init; }
-    public double Total { get; init; }
-    public string? Title { get; init; }
-    public string?  Description { get; init; }
-    public DateTime CreatedAt { get; init; }
-    public DateTime UpdatedAt { get; init; }
     
 }
