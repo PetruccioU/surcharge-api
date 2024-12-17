@@ -7,7 +7,7 @@ public record SurchargeDto(
     string? Description, 
     string PlacesApiId,
     PaymentMethods? PaymentMethod,
-    double SurchargePercentage,
+    double? SurchargePercentage,
     double Surcharge,
     double Total,
     DateTime CreatedAt, 
