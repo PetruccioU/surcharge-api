@@ -23,7 +23,7 @@ public class SurchargeController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateSurchargeRequestContract request, CancellationToken ct) // put the creation method to external class "CreateNotesContract"
+    public async Task<IActionResult> Create([FromBody] CreateSurchargeRequestContract request, CancellationToken ct) // put the creation method to external class "CreateSurchargeContract"
     {
         var surcharge = new SurchargeModel(
             request.Title, 
@@ -31,13 +31,14 @@ public class SurchargeController : ControllerBase
             request.PlacesApiId, 
             request.PaymentMethod,
             request.Total,
-            request.Surcharge
+            request.Surcharge,
+            SurchargeCalculator.CalculateSurcharge(request.Surcharge, request.Total)
             ); 
         // obtain parameters from req and store it in notes var 
         
         await _dbContext.Surcharge.AddAsync(surcharge, ct);  // add NotesModel object to db context
         await _dbContext.SaveChangesAsync(ct);  // save changes to db 
-        // ToDo: learn about CancellationToken (csrf protection?) 
+        // ToDo: learn about CancellationToken 
         
         return Ok("Post");
     }
@@ -67,19 +68,19 @@ public class SurchargeController : ControllerBase
                 }
             } 
             
-            if (!double.IsNaN(request.SurchargePercentage))
-            {
-                var selectorKey = GetSelectorKey(request.SortItem);
-                // sorting 
-                if (request.SortOrder == "desc")
-                {
-                    surchargeQuery = surchargeQuery.OrderByDescending(selectorKey);
-                }
-                else if (request.SortOrder == "asc")
-                {
-                    surchargeQuery = surchargeQuery.OrderBy(selectorKey);
-                }
-            } 
+            // if (!double.IsNaN(request.SurchargePercentage))
+            // {
+            //     var selectorKey = GetSelectorKey(request.SurchargePercentage);
+            //     // sorting 
+            //     if (request.SortOrder == "desc")
+            //     {
+            //         surchargeQuery = surchargeQuery.OrderByDescending(selectorKey);
+            //     }
+            //     else if (request.SortOrder == "asc")
+            //     {
+            //         surchargeQuery = surchargeQuery.OrderBy(selectorKey);
+            //     }
+            // } 
             
             
             // ToDo: Check pagination is correct
@@ -156,7 +157,7 @@ public class SurchargeController : ControllerBase
                 calculatedSurcharge = SurchargeCalculator.CalculateSurcharge(
                     request.NewSurcharge.Value, 
                     existingTotal);
-            }
+            } // TODO: Fix UPDATE Method, Total is not updated. 
 
             // If a new surcharge percentage was calculated, apply it
             if (calculatedSurcharge.HasValue)
@@ -174,7 +175,7 @@ public class SurchargeController : ControllerBase
                 .SetProperty(n => n.UpdatedAt, _ => DateTime.UtcNow), ct);
             
             await _dbContext.SaveChangesAsync(ct);
-            return Ok(new { message = "Note updated successfully" });
+            return Ok(new { message = "Surcharge updated successfully" });
         }
         catch (Exception e)
         {
