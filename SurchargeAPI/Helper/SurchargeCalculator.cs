@@ -3,15 +3,16 @@
 public static class SurchargeCalculator
 {
     private static double _purchase;
-    public static double SurchargeAmount;
-    public static double Total;
+    private static double _surchargeAmount;
+    private static double _total;
 
     public static double CalculateSurcharge(double surchargeAmount, double total)
     {
-        SurchargeAmount = surchargeAmount;
-        Total = total;
+        _purchase = 0;
+        _surchargeAmount = surchargeAmount;
+        _total = total;
         
-        if (Total <= 0)
+        if (_total <= 0)
         {
             throw new ArgumentException("Total must be greater than zero.");
         }
@@ -19,13 +20,13 @@ public static class SurchargeCalculator
         // Calculate Purchase if not already provided
         if (_purchase == 0)
         {
-            _purchase = Total - SurchargeAmount;
+            _purchase = _total - _surchargeAmount;
 
             if (_purchase < 0)
             {
                 throw new ArgumentException("Purchase cannot be negative. Check Total and SurchargeAmount values.");
             }
         }
-        return SurchargeAmount / _purchase;
+        return _surchargeAmount / _purchase;
     }
 }
